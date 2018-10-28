@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="UTF-8" />
+    <title>Products - Spring MVC Application</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.js"></script>
+</head>
+<body>
+<div class="container">
+    <div th:replace="orderTemplate :: searchPerson"></div>
+
+    <form action="#" th:action="@{/employer/contributionCancel}" th:object="${form}" method="post">
+
+        <div id="personData"></div>
+
+        <div>
+            Specyficzne dane dla danego zlecenia.
+        </div>
+        <button type="submit" id="nextButton">Dalej</button>
+      <!-- <input th:text="#{validationCtx.required}" />-->
+    </form>
+</div>
+<script>
+    $(document).ready(function(){
+
+        $("#nextButton").click(function(){
+
+            if($(document.forms[0]).valid()) {
+                document.forms[0].submit;
+            }
+        });
+
+        $(document.forms[0]).validate({
+            rules: {
+                pesel: "required",
+                firstname: "required"
+            },
+            messages: {
+                pesel: "Pole jest wymagane",
+                firstname: "Pole jest wymagane"
+            }
+        });
+
+    });
+
+</script>
+</body>
+</html>

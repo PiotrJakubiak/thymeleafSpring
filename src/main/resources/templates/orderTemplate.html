@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head lang="en">
+    <meta http-equiv="Content-Type" content="text/html" charset="UTF-8"/>
+    <link th:href="@{/webjars/bootstrap/3.3.7-1/css/bootstrap.min.css}"
+          href="http://cdn.jsdelivr.net/webjars/bootstrap/3.3.7-1/css/bootstrap.min.css"
+          rel="stylesheet" media="screen" />
+    <link rel="stylesheet" th:href="@{/css/style.css}" href="../../static/css/style.css" />
+</head>
+<body>
+    <div th:fragment="searchPerson">
+            <form id="customerSearch">
+                <div>
+                    <label>Pesel</label>
+                    <input type="text" id="searchPesel" name="searchPesel"/>
+                </div>
+                <div>
+                    <label>Numer uczestnika</label>
+                    <input type="text" id="searchNumber" name="searchNumber"/>
+                </div>
+                <button id="searchBtn" />
+            </form>
+        <script>
+            $(document).ready(function() {
+
+                $("#searchBtn").click(function (event) {
+                    event.preventDefault();
+                    updateEventCount();
+                    return false;
+                });
+
+                $("#customerSearch").validate({
+                    rules: {
+                        searchPesel: {
+                            required: function (element) {
+                                return $("#searchNumber").val() == '';;
+                            }
+                        },
+                        searchNumber: {
+                            required: function (element) {
+                                return $("#searchPesel").val() == '';
+                            }
+                        }
+                    },
+                    messages: {
+                        searchPesel: "Pole jest wymagane",
+                        searchNumber: "Pole jest wymagane"
+                    }
+                });
+            });
+
+            function updateEventCount() {
+
+
+                var pesel = $("#searchPesel").val();
+                var number = $("#searchNumber").val();
+                if($("#customerSearch").valid()) {
+
+                    $.post("searchByPesel2", {pesel: pesel, number: number}, function (fragment) {
+                        console.log(fragment)
+
+                        $("#personData").html(fragment); // update snippet of page
+
+                    });
+                }
+            }
+
+        </script>
+    </div>
+
+    <div th:fragment="personData">
+        <div th:if="${person}">
+            <input th:field="${person.firstname}" />
+
+            <input th:field="${person.surname}" />
+
+            <input th:field="${person.birthdate}" />
+         </div>
+    </div>
+
+    <div th:fragment="notFoundPerson">
+        Nie znaleziono
+    </div>
+</body>
+</html>
